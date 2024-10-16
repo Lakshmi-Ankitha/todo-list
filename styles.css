@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: pink;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    background: beige;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 10px 10px 10px black;
+    transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+.checkbox{
+    cursor: pointer;
+    border-width: 10px;
+    width: 20px;
+    height: 19px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #FFCFB3;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #FFD7C4;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.filter-container button {
+    margin: 0 5px;
+    background-color: #B7E0FF;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.filter-container button:hover {
+    background-color: #B7E0FF;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.taskItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.taskItem:hover {
+    background-color: #f9f9f9;
+}
+
+.taskItem.completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.icons img {
+    cursor: pointer;
+    width: 20px;
+    margin-left: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.icons img:hover {
+    transform: scale(1.1);
+}
+
+.progress-container {
+    margin-top: 20px;
+    background: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #8967B3;
+    width: 0;
+    transition: width 0.3s ease-in-out;
+}
+.filter-container button.active{
+    background-color: #FFD7C4;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+    }
+    .input-container {
+        flex-direction: column;
+    }
+    input[type="text"] {
+        margin-bottom:10px;
+    }
+    .filter-container {
+        flex: 1;
+        margin: 10px;
+    }
+}
