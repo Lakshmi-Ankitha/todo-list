@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Completed Tasks</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="todo-app">
+    <h1 class="app-title">✅ Completed Tasks</h1>
+    <ul id="completedTaskList"></ul>
+    <button id="backButton" class="completed-tasks-btn">Back to To-Do List</button>
+  </div>
+  
+  <script>
+    // Fetch completed tasks from localStorage
+    const completedTaskList = document.getElementById('completedTaskList');
+    const backButton = document.getElementById('backButton');
+    const completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
+
+    // Display completed tasks
+    completedTasks.forEach((task, index) => {
+      const taskItem = document.createElement('li');
+      taskItem.classList.add('task-item');
+
+      const taskText = document.createElement('span');
+      taskText.textContent = task;
+      taskText.classList.add('completed-text');
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.classList.add('delete-button');
+
+      // Delete task event
+      deleteButton.addEventListener('click', () => {
+        taskItem.remove();
+        completedTasks.splice(index, 1); // Remove from the array
+        localStorage.setItem('completedTasks', JSON.stringify(completedTasks)); // Update storage
+      });
+
+      // Append elements
+      taskItem.appendChild(taskText);
+      taskItem.appendChild(deleteButton);
+      completedTaskList.appendChild(taskItem);
+    });
+
+    // Back button to return to the main page
+    backButton.addEventListener('click', () => {
+      window.location.href = 'todo.html'; // Redirect back to the main page
+    });
+  </script>
+</body>
+</html>

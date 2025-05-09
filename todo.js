@@ -1,87 +1,89 @@
-let tasks = [];
-
 const taskInput = document.getElementById('taskInput');
-const taskList = document.getElementById('task-list');
-const addTaskBtn = document.getElementById('addTaskBtn');
-const allTasksBtn = document.getElementById('allTasksBtn');
-const completedTasksBtn = document.getElementById('completedTasksBtn');
-const pendingTasksBtn = document.getElementById('pendingTasksBtn');
-const progressBar = document.getElementById('progress');
+const addTaskButton = document.getElementById('addTaskButton');
+const taskList = document.getElementById('taskList');
+const completedTasksButton = document.getElementById('completedTasksButton');
 
-addTaskBtn.addEventListener('click', addTask);
-allTasksBtn.addEventListener('click', showAllTasks);
-completedTasksBtn.addEventListener('click', showCompletedTasks);
-pendingTasksBtn.addEventListener('click', showPendingTasks);
+// Load pending tasks from localStorage or initialize empty array
+let pendingTasks = JSON.parse(localStorage.getItem('pendingTasks')) || [];
 
+// Load completed tasks from localStorage or initialize empty array
+let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
+
+// Function to save pending tasks to localStorage
+function savePendingTasks() {
+  localStorage.setItem('pendingTasks', JSON.stringify(pendingTasks));
+}
+
+// Function to save completed tasks to localStorage
+function saveCompletedTasks() {
+  localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+}
+
+// Function to render pending tasks
+function renderPendingTasks() {
+  taskList.innerHTML = '';
+  pendingTasks.forEach((taskValue, index) => {
+    const taskItem = document.createElement('li');
+    taskItem.classList.add('task-item');
+
+    const taskText = document.createElement('span');
+    taskText.textContent = taskValue;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.classList.add('task-checkbox');
+
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        taskText.classList.add('completed-text');
+        completedTasks.push(taskValue);
+        saveCompletedTasks();
+
+        // Remove from pending tasks
+        pendingTasks.splice(index, 1);
+        savePendingTasks();
+
+        renderPendingTasks();
+      }
+    });
+
+    taskItem.appendChild(taskText);
+    taskItem.appendChild(checkbox);
+    taskList.appendChild(taskItem);
+  });
+}
+
+// Function to add a new task
 function addTask() {
-    const taskText = taskInput.value.trim();
-    if (taskText) {
-        tasks.push({ text: taskText, completed: false });
-        taskInput.value = '';
-        renderTasks();
-        updateProgress();
-    }
+  const taskValue = taskInput.value.trim();
+
+  if (taskValue === '') {
+    alert('Please enter a task!');
+    return;
+  }
+
+  pendingTasks.push(taskValue);
+  savePendingTasks();
+  renderPendingTasks();
+
+  taskInput.value = '';
 }
 
-function renderTasks(taskArray = tasks) {
-    taskList.innerHTML = '';
-    taskArray.forEach((task, index) => {
-        const taskItem = document.createElement('li');
-        taskItem.className = `taskItem ${task.completed ? "completed" : ""}`;
-        taskItem.innerHTML = `
-            <span>${task.text}</span>
-            <div class="icons">
-                <input type="checkbox" class="checkbox" ${task.completed ? "checked" : ""} onchange="toggleTaskComplete(${index})"/>
-                <img src="images/bin.png" onclick="deleteTask(${index})" alt="Delete" />
-            </div>
-        `;
-        taskList.appendChild(taskItem);
-    });
-}
+// Function to view completed tasks
+completedTasksButton.addEventListener('click', () => {
+  saveCompletedTasks();
+  window.location.href = 'completed.html';
+});
 
-function toggleTaskComplete(index) {
-    tasks[index].completed = !tasks[index].completed;
-    renderTasks();
-    updateProgress();
-}
+// Initial render of pending tasks on page load
+renderPendingTasks();
 
-function deleteTask(index) {
-    tasks.splice(index, 1);
-    renderTasks();
-    updateProgress();
-}
+// Add task on button click
+addTaskButton.addEventListener('click', addTask);
 
-function showAllTasks() {
-    renderTasks();
-    setActiveButton(allTasksBtn);
-}
-
-function showCompletedTasks() {
-    const completedTasks = tasks.filter(task => task.completed);
-    renderTasks(completedTasks);
-    setActiveButton(completedTasksBtn);
-}
-
-function showPendingTasks() {
-    const pendingTasks = tasks.filter(task => !task.completed);
-    renderTasks(pendingTasks);
-    setActiveButton(pendingTasksBtn);
-}
-
-function updateProgress() {
-    const completedTasks = tasks.filter(task => task.completed);
-    const progress = tasks.length > 0 ? (completedTasks.length / tasks.length) * 100 : 0;
-    progressBar.style.width = `${progress}%`;
-    progressBar.textContent = `${Math.round(progress)}%`;
-}
-
-function setActiveButton(activeButton) {
-    [allTasksBtn, completedTasksBtn, pendingTasksBtn].forEach(btn => {
-        btn.classList.remove('active');
-    });
-    activeButton.classList.add('active');
-}
-
-// Initial render
-renderTasks();
-updateProgress();
+// Add task on Enter key press
+taskInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    addTask();
+  }
+});
